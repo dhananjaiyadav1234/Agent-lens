@@ -1,5 +1,5 @@
-"""AgentLens: framework-agnostic observability, debugging, and AI-powered failure
-analysis for AI agents.
+"""AgentLens: framework-agnostic observability, debugging, and deterministic
+issue detection for AI agents.
 
 Typical use::
 
@@ -19,8 +19,10 @@ Run the deterministic detectors over a completed run with ``lens.detect(run_id)`
 (which also persists the issues it generates) and read them back with
 ``lens.get_issues(run_id)``. Storage is in-memory by default; pass
 ``AgentLens(store=SQLiteTraceStore(path))`` (see :mod:`agentlens.storage`) to
-persist runs, events, and issues across process restarts. The REST API and
-framework integrations are added in later phases.
+persist runs, events, and issues across process restarts. Optional framework
+adapters (LangChain, the OpenAI Agents SDK, CrewAI) live under
+:mod:`agentlens.integrations` and record into an existing run via this same
+public API; see the project README for installation and usage.
 """
 
 from __future__ import annotations

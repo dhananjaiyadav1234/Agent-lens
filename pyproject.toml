@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "agentlens"
 version = "0.1.0"
-description = "Framework-agnostic observability, debugging, and AI-powered failure analysis for AI agents."
+description = "Framework-agnostic observability, debugging, and deterministic issue detection for AI agents."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
@@ -50,8 +50,8 @@ crewai = [
 agentlens = "agentlens.cli.main:main"
 
 [project.urls]
-Homepage = "https://github.com/dhananjai/Agent-lens"
-Repository = "https://github.com/dhananjai/Agent-lens"
+Homepage = "https://github.com/dhananjaiyadav1234/Agent-lens"
+Repository = "https://github.com/dhananjaiyadav1234/Agent-lens"
 
 [tool.hatch.build.targets.wheel]
 packages = ["agentlens"]

@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core:
+    name: Core quality (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # The full test suite exercises every optional integration, so the dev
+      # environment installs all extras alongside the package itself.
+      - name: Install package (dev + all optional extras)
+        run: python -m pip install -e ".[dev,langchain,openai-agents,crewai]"
+
+      - name: ruff check
+        run: ruff check .
+
+      - name: ruff format check
+        run: ruff format --check .
+
+      - name: pytest
+        run: pytest -q
+
+  clean-install:
+    name: Clean install verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Exercises `pip install .`, the console script, optional-dependency
+      # isolation, the Quick Start workflow, and each extra -- all in throwaway
+      # venvs, never the runner's own environment.
+      - name: Run release verification script
+        run: bash scripts/verify_release.sh python
+
+  langchain-extra:
+    name: Optional integration - LangChain
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Installs only this one extra (not the others) to prove it is genuinely
+      # optional and self-contained.
+      - name: Install package (dev + langchain only)
+        run: python -m pip install -e ".[dev,langchain]"
+
+      - name: Run LangChain integration tests
+        run: >
+          pytest tests/unit/test_langchain_callback.py
+          tests/integration/test_langchain_demo_scenarios.py -q
+
+  openai-agents-extra:
+    name: Optional integration - OpenAI Agents SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package (dev + openai-agents only)
+        run: python -m pip install -e ".[dev,openai-agents]"
+
+      - name: Run OpenAI Agents SDK integration tests
+        run: >
+          pytest tests/unit/test_openai_agents_integration.py
+          tests/integration/test_openai_agents_demo_scenarios.py -q
+
+  crewai-extra:
+    name: Optional integration - CrewAI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package (dev + crewai only)
+        run: python -m pip install -e ".[dev,crewai]"
+
+      # Normal `pytest` execution only. CrewAI's event bus starts a background
+      # thread on import that keeps a bare `--collect-only` process from
+      # exiting cleanly -- a real test run (this command) is unaffected and
+      # exits normally, so that is the supported invocation here.
+      - name: Run CrewAI integration tests
+        run: >
+          pytest tests/unit/test_crewai_integration.py
+          tests/integration/test_crewai_demo_scenarios.py -q
