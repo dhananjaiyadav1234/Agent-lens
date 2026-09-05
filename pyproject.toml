@@ -37,6 +37,9 @@ dev = [
     "ruff>=0.6",
 ]
 
+[project.scripts]
+agentlens = "agentlens.cli.main:main"
+
 [project.urls]
 Homepage = "https://github.com/dhananjai/Agent-lens"
 Repository = "https://github.com/dhananjai/Agent-lens"
