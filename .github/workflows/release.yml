@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/agentlens-ai/
+      url: https://pypi.org/project/agentlens-evaluator/
     permissions:
       # Required for PyPI Trusted Publishing (OIDC) -- no API token is used
       # or stored anywhere in this repository.

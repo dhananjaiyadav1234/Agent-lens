@@ -75,15 +75,15 @@ flow.
 
 ## Installation
 
-The PyPI distribution name is **`agentlens-ai`** (the `agentlens` name was
-already taken by an unrelated package); the Python import name is unaffected
-and remains `agentlens`. As of this writing the package has **not yet been
-published**, so `pip install agentlens-ai` will not work until a release is
-made — install from a local clone in the meantime (see below). Once published,
-installation will be:
+The PyPI distribution name is **`agentlens-evaluator`** (the `agentlens` name
+was already taken by an unrelated package); the Python import name is
+unaffected and remains `agentlens`. As of this writing the package has **not
+yet been published**, so `pip install agentlens-evaluator` will not work until
+a release is made — install from a local clone in the meantime (see below).
+Once published, installation will be:
 
 ```bash
-pip install agentlens-ai
+pip install agentlens-evaluator
 ```
 
 ```python
@@ -117,9 +117,9 @@ Each framework adapter is an install extra; none is required for core usage.
 From PyPI (once published):
 
 ```bash
-pip install "agentlens-ai[langchain]"
-pip install "agentlens-ai[openai-agents]"
-pip install "agentlens-ai[crewai]"
+pip install "agentlens-evaluator[langchain]"
+pip install "agentlens-evaluator[openai-agents]"
+pip install "agentlens-evaluator[crewai]"
 ```
 
 From a local clone today, the same extras apply to the dot-path form:
