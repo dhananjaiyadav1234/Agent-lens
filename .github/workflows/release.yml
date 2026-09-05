@@ -20,7 +20,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install the package and dev/build tooling
-        run: python -m pip install -e ".[dev]" build twine
+        run: python -m pip install -e ".[dev,langchain,openai-agents,crewai]" build twine
 
       - name: Run the test suite
         run: pytest -q
