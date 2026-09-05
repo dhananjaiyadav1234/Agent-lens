@@ -39,6 +39,9 @@ dev = [
 langchain = [
     "langchain-core>=0.3",
 ]
+openai-agents = [
+    "openai-agents>=0.2",
+]
 
 [project.scripts]
 agentlens = "agentlens.cli.main:main"
