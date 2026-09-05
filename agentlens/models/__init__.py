@@ -32,6 +32,7 @@ from agentlens.models.base import AgentLensModel, JsonMapping, JsonValue, UtcDat
 from agentlens.models.enums import EventType, IssueType, RunStatus, Severity
 from agentlens.models.event import AgentEvent
 from agentlens.models.issue import AgentIssue
+from agentlens.models.report import AgentReport, ReportSummary
 from agentlens.models.run import AgentRun
 
 __all__ = [
@@ -39,6 +40,8 @@ __all__ = [
     "AgentRun",
     "AgentEvent",
     "AgentIssue",
+    "AgentReport",
+    "ReportSummary",
     # Enums
     "RunStatus",
     "EventType",

@@ -12,7 +12,7 @@ from typing import Any
 from uuid import UUID
 
 from agentlens.core.errors import TraceStateError
-from agentlens.core.storage import InMemoryTraceStore
+from agentlens.core.storage import TraceStore
 from agentlens.models import AgentEvent, AgentRun, EventType
 from agentlens.models.base import JsonValue
 
@@ -29,7 +29,7 @@ class Trace:
     and calls :meth:`record_event` on it.
     """
 
-    def __init__(self, run: AgentRun, store: InMemoryTraceStore) -> None:
+    def __init__(self, run: AgentRun, store: TraceStore) -> None:
         self._run_id = run.id
         self._store = store
         self._next_sequence = _FIRST_SEQUENCE_NUMBER

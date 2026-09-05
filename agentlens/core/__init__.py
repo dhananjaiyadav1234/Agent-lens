@@ -15,13 +15,14 @@ from __future__ import annotations
 from agentlens.core.errors import AgentLensError, RunLifecycleError, TraceStateError
 from agentlens.core.lens import AgentLens
 from agentlens.core.run_manager import RunManager
-from agentlens.core.storage import InMemoryTraceStore
+from agentlens.core.storage import InMemoryTraceStore, TraceStore
 from agentlens.core.tracer import Trace
 
 __all__ = [
     "AgentLens",
     "Trace",
     "RunManager",
+    "TraceStore",
     "InMemoryTraceStore",
     "AgentLensError",
     "TraceStateError",

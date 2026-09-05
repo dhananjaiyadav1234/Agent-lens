@@ -7,11 +7,12 @@ from contextlib import contextmanager
 from typing import Any
 from uuid import UUID
 
-from agentlens.core.errors import TraceStateError
+from agentlens.core.errors import AgentLensError, TraceStateError
 from agentlens.core.run_manager import RunManager
-from agentlens.core.storage import InMemoryTraceStore
+from agentlens.core.storage import InMemoryTraceStore, TraceStore
 from agentlens.core.tracer import Trace
-from agentlens.models import AgentEvent, AgentRun, EventType
+from agentlens.detectors.orchestration import run_detectors
+from agentlens.models import AgentEvent, AgentIssue, AgentReport, AgentRun, EventType
 from agentlens.models.base import JsonMapping, JsonValue
 
 __all__ = ["AgentLens"]
@@ -38,10 +39,14 @@ class AgentLens:
     Not thread-safe and not async-context-aware: the active trace is plain
     instance state. One instance is meant to be driven by one synchronous flow at
     a time. Nested traces are rejected (see :meth:`trace`).
+
+    By default an instance keeps everything in memory. Pass ``store=`` a
+    :class:`~agentlens.core.storage.TraceStore` (for example
+    :class:`agentlens.storage.SQLiteTraceStore`) to persist runs and events.
     """
 
-    def __init__(self) -> None:
-        self._store = InMemoryTraceStore()
+    def __init__(self, *, store: TraceStore | None = None) -> None:
+        self._store: TraceStore = store if store is not None else InMemoryTraceStore()
         self._run_manager = RunManager(self._store)
         self._active_trace: Trace | None = None
 
@@ -128,6 +133,66 @@ class AgentLens:
             status=status,
             metadata=metadata,
         )
+
+    # -- detection --------------------------------------------------
+
+    def detect(self, run: AgentRun | UUID) -> list[AgentIssue]:
+        """Run every deterministic detector over one stored run, persist and return the issues.
+
+        Accepts a run id or an :class:`~agentlens.models.AgentRun`; either way the
+        run and its events are looked up in this instance's store, so only that
+        run's events are analysed. Detectors run in a fixed order
+        (loop, retry, duplicate-tool, inefficiency) with their default
+        configuration -- see :func:`agentlens.detectors.run_detectors`.
+
+        The generated issues are handed to ``store.save_issues`` and then returned
+        unchanged. Persistence is **append-only and not de-duplicated**: calling
+        ``detect`` again on the same run appends a second batch of issue records
+        (each with its own fresh ``id``). Use :meth:`get_issues` to read back what
+        has been persisted without re-running detection.
+
+        The run and its events are never modified. Raises :class:`AgentLensError`
+        if no run with that id is stored; a failure inside ``save_issues``
+        propagates.
+        """
+
+        run_id = run.id if isinstance(run, AgentRun) else run
+        stored_run = self._store.get_run(run_id)
+        if stored_run is None:
+            raise AgentLensError(f"cannot detect issues: no run with id {run_id!r}")
+        events = self._store.get_events(run_id)
+        issues = run_detectors(stored_run, events)
+        self._store.save_issues(issues)
+        return issues
+
+    def get_issues(self, run_id: UUID) -> list[AgentIssue]:
+        """Return issues already persisted for ``run_id`` (a fresh list).
+
+        This is a plain read: it never runs detectors. An unknown run id, or a
+        run for which :meth:`detect` has not been called, returns ``[]``.
+        """
+
+        return self._store.get_issues(run_id)
+
+    def get_report(self, run_id: UUID) -> AgentReport:
+        """Return a read-only aggregate :class:`~agentlens.models.AgentReport` for ``run_id``.
+
+        Retrieves the stored run, its events (in ``sequence_number`` order), and
+        its already-persisted issues (in save order), then computes a
+        deterministic :class:`~agentlens.models.ReportSummary` over them.
+
+        This is purely a read: it does **not** run detectors, call :meth:`detect`,
+        create issues, or write anything to storage. Repeated calls on unchanged
+        data return byte-identical content. Raises :class:`AgentLensError` if no
+        run with that id is stored -- consistent with :meth:`detect`.
+        """
+
+        run = self._store.get_run(run_id)
+        if run is None:
+            raise AgentLensError(f"cannot build report: no run with id {run_id!r}")
+        events = self._store.get_events(run_id)
+        issues = self._store.get_issues(run_id)
+        return AgentReport.build(run, events, issues)
 
     # -- read access ------------------------------------------------
 

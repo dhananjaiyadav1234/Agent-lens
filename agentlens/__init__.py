@@ -15,8 +15,12 @@ Typical use::
             output={"tool": "database_lookup"},
         )
 
-Storage is in-memory for this milestone; detectors, persistence, the REST API,
-and framework integrations are added in later phases.
+Run the deterministic detectors over a completed run with ``lens.detect(run_id)``
+(which also persists the issues it generates) and read them back with
+``lens.get_issues(run_id)``. Storage is in-memory by default; pass
+``AgentLens(store=SQLiteTraceStore(path))`` (see :mod:`agentlens.storage`) to
+persist runs, events, and issues across process restarts. The REST API and
+framework integrations are added in later phases.
 """
 
 from __future__ import annotations

@@ -14,7 +14,7 @@ from datetime import datetime
 from uuid import UUID
 
 from agentlens.core.errors import RunLifecycleError
-from agentlens.core.storage import InMemoryTraceStore
+from agentlens.core.storage import TraceStore
 from agentlens.models import AgentRun, RunStatus
 from agentlens.models.base import utcnow
 
@@ -26,7 +26,7 @@ _TERMINAL_STATUSES = (RunStatus.SUCCESS, RunStatus.FAILED)
 class RunManager:
     """Starts runs and performs atomic terminal transitions."""
 
-    def __init__(self, store: InMemoryTraceStore) -> None:
+    def __init__(self, store: TraceStore) -> None:
         self._store = store
 
     def start_run(self, task: str, *, metadata: dict | None = None) -> AgentRun:
