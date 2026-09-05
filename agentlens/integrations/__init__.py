@@ -11,4 +11,6 @@ Available:
 * :mod:`agentlens.integrations.openai_agents` -- an OpenAI Agents SDK tracing
   processor (requires the ``openai-agents`` extra:
   ``pip install "agentlens[openai-agents]"``).
+* :mod:`agentlens.integrations.crewai` -- a CrewAI event-bus listener
+  (requires the ``crewai`` extra: ``pip install "agentlens[crewai]"``).
 """

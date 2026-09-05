@@ -42,6 +42,9 @@ langchain = [
 openai-agents = [
     "openai-agents>=0.2",
 ]
+crewai = [
+    "crewai>=1.15,<2.0",
+]
 
 [project.scripts]
 agentlens = "agentlens.cli.main:main"
