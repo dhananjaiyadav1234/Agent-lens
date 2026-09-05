@@ -48,11 +48,14 @@ packages = ["agentlens"]
 minversion = "8.0"
 testpaths = ["tests"]
 addopts = "-ra"
+# The `examples` package is developer-facing (not shipped in the wheel); put the
+# repo root on sys.path so tests can import the demo scenarios.
+pythonpath = ["."]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["agentlens", "tests"]
+src = ["agentlens", "examples", "tests"]
 
 [tool.ruff.lint]
 select = [
@@ -70,4 +73,4 @@ select = [
 "tests/**" = ["B011", "SIM117"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["agentlens"]
+known-first-party = ["agentlens", "examples"]

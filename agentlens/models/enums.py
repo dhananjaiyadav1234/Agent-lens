@@ -48,8 +48,14 @@ class IssueType(StrEnum):
     """
 
     AGENT_LOOP = "agent_loop"
+    #: Alias for :attr:`AGENT_LOOP` (same value); ``IssueType.LOOP is IssueType.AGENT_LOOP``.
+    LOOP = "agent_loop"
     EXCESSIVE_RETRY = "excessive_retry"
+    #: Alias for :attr:`EXCESSIVE_RETRY` (same value).
+    RETRY = "excessive_retry"
     DUPLICATE_TOOL_CALL = "duplicate_tool_call"
+    #: Alias for :attr:`DUPLICATE_TOOL_CALL` (same value).
+    DUPLICATE = "duplicate_tool_call"
     TOOL_FAILURE = "tool_failure"
     INEFFICIENCY = "inefficiency"
 
