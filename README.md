@@ -75,9 +75,22 @@ flow.
 
 ## Installation
 
-AgentLens is not yet published to PyPI; install it from a local clone.
+The PyPI distribution name is **`agentlens-ai`** (the `agentlens` name was
+already taken by an unrelated package); the Python import name is unaffected
+and remains `agentlens`. As of this writing the package has **not yet been
+published**, so `pip install agentlens-ai` will not work until a release is
+made — install from a local clone in the meantime (see below). Once published,
+installation will be:
 
-### Core
+```bash
+pip install agentlens-ai
+```
+
+```python
+from agentlens import AgentLens  # import name is unchanged
+```
+
+### Core (from source, until the first PyPI release)
 
 ```bash
 git clone https://github.com/dhananjaiyadav1234/Agent-lens.git
@@ -100,7 +113,16 @@ client, no optional dependency is required or imported.
 
 ### Optional framework integrations
 
-Each framework adapter is an install extra; none is required for core usage:
+Each framework adapter is an install extra; none is required for core usage.
+From PyPI (once published):
+
+```bash
+pip install "agentlens-ai[langchain]"
+pip install "agentlens-ai[openai-agents]"
+pip install "agentlens-ai[crewai]"
+```
+
+From a local clone today, the same extras apply to the dot-path form:
 
 ```bash
 pip install ".[langchain]"

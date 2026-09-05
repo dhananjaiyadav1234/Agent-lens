@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "agentlens"
+name = "agentlens-ai"
 version = "0.1.0"
 description = "Framework-agnostic observability, debugging, and deterministic issue detection for AI agents."
 readme = "README.md"
@@ -22,6 +22,9 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Debuggers",
@@ -52,6 +55,7 @@ agentlens = "agentlens.cli.main:main"
 [project.urls]
 Homepage = "https://github.com/dhananjaiyadav1234/Agent-lens"
 Repository = "https://github.com/dhananjaiyadav1234/Agent-lens"
+Issues = "https://github.com/dhananjaiyadav1234/Agent-lens/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["agentlens"]
